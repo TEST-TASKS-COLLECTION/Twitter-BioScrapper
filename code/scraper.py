@@ -27,6 +27,9 @@ def get_handle():
 
 def scrap_bio(url):
     r = requests.get(url, headers=headers).json()
+    # print(r)
+    if r['errors']:
+        return "No such user"
     return r['data'][0]['description']
     
 
