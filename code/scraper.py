@@ -51,24 +51,10 @@ def get_headers(err = False):
     return headers
 
 def get_params(handle):
-    
-    # val = f'{"screen_name":{handle},"withSafetyModeUserFields":true,"withSuperFollowsUserFields":true}'
-    # e_val  = urllib.parse.quote(val.encode('utf8'))
-
-    # params = {
-    #     "variables": f"%7B%22screen_name%22%3A%22{handle}%22%2C%22withSafetyModeUserFields%22%3Atrue%2C%22withSuperFollowsUserFields%22%3Atrue%7D"
-    # }
-    # params = {
-    #     "variables": {
-    #         "screen_name": handle
-    #     }
-    # }
     val = {"screen_name": f"{handle}","withSafetyModeUserFields":True,"withSuperFollowsUserFields":True}
     params = {
         "variables" : json.dumps(val)
     }
-    # params = f"variables=%7B%22screen_name%22%3A%22{handle}%22%2C%22withSafetyModeUserFields%22%3Atrue%2C%22withSuperFollowsUserFields%22%3Atrue%7D"
-    # print(params)
     return params
                                 
 def scrap_bio(headers, params):
@@ -80,7 +66,7 @@ def scrap_bio(headers, params):
         if r.get('errors', False):
             print("WRNG GUEST TOKEN")
             headers = get_headers(err=True)
-            scrap_bio(headers, params)
+            return scrap_bio(headers, params)
         if r['data']['user']['result']['__typename'] == 'UserUnavailable':
             return "User Unavailable"
         return r['data']['user']['result']['legacy']['description']
