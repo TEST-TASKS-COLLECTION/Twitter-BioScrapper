@@ -23,15 +23,13 @@ def get_handle():
     return args.handle
 
 
-
-
-def get_headers(err = False):
+def get_id(err=True):
     """
     Args:
         err (bool, optional): If error generate a new id. Defaults to False.
 
     Returns:
-        headers (dict): dict with bearer token and id as values
+        id (str): return the generated id
     """
     try:
         if err:
@@ -46,6 +44,18 @@ def get_headers(err = False):
                 return get_headers(err=True)
     except FileNotFoundError:
         return get_headers(err=True)
+    
+    return id
+
+def get_headers(id):
+    """
+    Args:
+        id (str): the twitter generated id
+
+    Returns:
+        headers (dict): dict with bearer token and id as values
+    """
+
     
     headers = {
         "authorization": BEARER_TOKEN,
@@ -122,7 +132,8 @@ def scrap_bio(headers, params):
 if __name__ == "__main__":
     handle = get_handle().lower()
     # handle = "elonmusk"
-    headers = get_headers()
+    id = get_id()
+    headers = get_headers(id)
     params = get_params(handle) 
     print(scrap_bio(headers, params))
     

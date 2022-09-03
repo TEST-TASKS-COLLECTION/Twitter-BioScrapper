@@ -3,33 +3,27 @@
 import unittest
 from codes.scraper import (
                             save_token, scrap_bio, 
-                            get_headers,
+                            get_headers, get_id,
                             get_params, BEARER_TOKEN
 )
 import os
 
 HANDLE  = 'elonmusk'
 SAVE_FILE = 'guest_id.txt'
-# HANDLE  = 'mikeyy19xx'
 
-# def get_id_header(id):
-#     headers = {
-#         "authorization": BEARER_TOKEN,
-#         "x-guest-token": id,
-#     }
-#     return headers
 
 class TestScrapper(unittest.TestCase):
     
     def setUp(self):
-        id = save_token(save=False)
-        header_test = get_headers(err=True)
+        id = get_id(err=True)
+        header_test = get_headers(id)
         # header_test = get_id_header(id)
         params = get_params(HANDLE) 
         self.bio_test = scrap_bio(header_test, params)  
         
     def test_token_exist(self):
-        headers = get_headers()
+        id = get_id()
+        headers = get_headers(id)
         params = get_params(HANDLE) 
         bio_true = scrap_bio(headers, params)
         self.assertEqual(bio_true, self.bio_test)
