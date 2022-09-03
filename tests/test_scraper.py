@@ -6,8 +6,11 @@ from codes.scraper import (
                             get_headers,
                             get_params, BEARER_TOKEN
 )
+import os
 
-HANDLE  = 'elonmus'
+HANDLE  = 'elonmusk'
+SAVE_FILE = 'guest_id.txt'
+# HANDLE  = 'mikeyy19xx'
 
 # def get_id_header(id):
 #     headers = {
@@ -29,7 +32,6 @@ class TestScrapper(unittest.TestCase):
         headers = get_headers()
         params = get_params(HANDLE) 
         bio_true = scrap_bio(headers, params)
-               
         self.assertEqual(bio_true, self.bio_test)
 
     def test_type(self):
@@ -40,5 +42,10 @@ class TestScrapper(unittest.TestCase):
         
     def test_no_such_user(self):
         self.assertNotEqual(self.bio_test, "No Such User")
+        
+    def test_file_created(self):
+        os.remove(f"data/{SAVE_FILE}")
+        _ = save_token()
+        self.assertIn(SAVE_FILE, os.listdir('data'))
 
 unittest.main()
