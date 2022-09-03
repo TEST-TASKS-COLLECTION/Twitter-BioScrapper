@@ -33,16 +33,19 @@ def get_headers(err = False):
     Returns:
         headers (dict): dict with bearer token and id as values
     """
-    if err:
-        # print("CREATING NEW TOKEN")
-        id = save_token()
-    
-    else:
-        # print("USING CACHE")
-        id = read_token()
+    try:
+        if err:
+            # print("CREATING NEW TOKEN")
+            id = save_token()
         
-        if not id:
-            return get_headers(err=True)
+        else:
+            # print("USING CACHE")
+            id = read_token()
+            
+            if not id:
+                return get_headers(err=True)
+    except FileNotFoundError:
+        return get_headers(err=True)
     
     headers = {
         "authorization": BEARER_TOKEN,

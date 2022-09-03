@@ -9,18 +9,19 @@ from codes.scraper import (
 
 HANDLE  = 'elonmus'
 
-def get_id_header(id):
-    headers = {
-        "authorization": BEARER_TOKEN,
-        "x-guest-token": id,
-    }
-    return headers
+# def get_id_header(id):
+#     headers = {
+#         "authorization": BEARER_TOKEN,
+#         "x-guest-token": id,
+#     }
+#     return headers
 
 class TestScrapper(unittest.TestCase):
     
     def setUp(self):
         id = save_token(save=False)
-        header_test = get_id_header(id)
+        header_test = get_headers(err=True)
+        # header_test = get_id_header(id)
         params = get_params(HANDLE) 
         self.bio_test = scrap_bio(header_test, params)  
         
