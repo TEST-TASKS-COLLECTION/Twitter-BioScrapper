@@ -6,7 +6,8 @@ beautifulsoup4==4.11.1
 bs4==0.0.1
 certifi==2022.6.15
 charset-normalizer==2.1.1
--e git+ssh://git@github.com/TEST-TASKS-COLLECTION/Twitter-BioScrapper.git@0aaaa4331a4f24d432eb152560d5b3be79f58aa6#egg=code
+-e git+ssh://git@github.com/TEST-TASKS-COLLECTION/Twitter-BioScrapper.git@9b34567b00a406e56c98518aa38a6220cf58a077#egg=code
+-e git+ssh://git@github.com/TEST-TASKS-COLLECTION/Twitter-BioScrapper.git@9b34567b00a406e56c98518aa38a6220cf58a077#egg=codes
 debugpy==1.6.3
 decorator==5.1.1
 entrypoints==0.4

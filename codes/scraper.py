@@ -11,9 +11,6 @@ URL_ID = "https://api.twitter.com/1.1/guest/activate.json"
 URL = 'https://twitter.com/i/api/graphql/gr8Lk09afdgWo7NvzP89iQ/UserByScreenName'
 
 
-headers = {
-    "Authorization": f"Bearer {BEARER_TOKEN}"
-}
 
 def get_handle():
     """
@@ -26,22 +23,26 @@ def get_handle():
     return args.handle
 
 
+
+
 def get_headers(err = False):
-    headers = {
-        'authorization': BEARER_TOKEN
-    }
-    
+    """
+    Args:
+        err (bool, optional): If error generate a new id. Defaults to False.
+
+    Returns:
+        headers (dict): dict with bearer token and id as values
+    """
     if err:
         print("CREATING NEW TOKEN")
-        id = requests.post(URL_ID, headers= headers).json()['guest_token']
-    
-        with open('data/guest_id.txt', "w") as f:
-            f.write(id)
+        id = save_token()
     
     else:
         print("USING CACHE")
-        with open('data/guest_id.txt', "r") as f:
-            id = f.read()
+        id = read_token()
+        
+        if not id:
+            return get_headers(err=True)
     
     headers = {
         "authorization": BEARER_TOKEN,
@@ -50,7 +51,38 @@ def get_headers(err = False):
     # print(headers)
     return headers
 
+def read_token():
+    print("READING TOKEN FORM FILE")
+    with open('data/guest_id.txt', "r") as f:
+        id = f.read()
+    print("ID IS:", id)
+    return id
+
+def save_token(save=True):
+    """
+    Return:
+        id (str): a token generated from twitter 
+    """
+    headers = {
+        "Authorization": f"{BEARER_TOKEN}"
+    }
+    id = requests.post(URL_ID, headers= headers).json()['guest_token']
+    # id = requests.post(URL_ID, headers= headers).json()
+    # print(id)
+    if save:
+        with open('data/guest_id.txt', "w") as f:
+            f.write(id)
+    return id
+
 def get_params(handle):
+    """
+
+    Args:
+        handle (str): a twitter user handle 
+
+    Returns:
+        params (dict): params to pass into the request 
+    """
     val = {"screen_name": f"{handle}","withSafetyModeUserFields":True,"withSuperFollowsUserFields":True}
     params = {
         "variables" : json.dumps(val)
@@ -58,10 +90,18 @@ def get_params(handle):
     return params
                                 
 def scrap_bio(headers, params):
-    # params = {'screen_name': 'elonmusk'}
+    """
+
+    Args:
+        headers (_type_): _description_
+        params (_type_): _description_
+
+    Returns:
+        - returns a user bio if user exists
+        - provide feedback if there is no user or they are not available
+    """
     r = requests.get(URL, headers=headers, params=params).json()
-    # r = requests.get(URL + f"?{params}", headers=headers).json()
-    # print(r)
+
     try:
         if r.get('errors', False):
             print("WRNG GUEST TOKEN")
@@ -72,10 +112,13 @@ def scrap_bio(headers, params):
         return r['data']['user']['result']['legacy']['description']
     except KeyError:
         return "No Such User"
+    # except json.JSONDecodeError:
+    #     return scrap_bio(headers, params)
     
 
 if __name__ == "__main__":
     handle = get_handle().lower()
+    # handle = "elonmusk"
     headers = get_headers()
     params = get_params(handle) 
     print(scrap_bio(headers, params))
