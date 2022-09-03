@@ -34,11 +34,11 @@ def get_headers(err = False):
         headers (dict): dict with bearer token and id as values
     """
     if err:
-        print("CREATING NEW TOKEN")
+        # print("CREATING NEW TOKEN")
         id = save_token()
     
     else:
-        print("USING CACHE")
+        # print("USING CACHE")
         id = read_token()
         
         if not id:
@@ -52,10 +52,10 @@ def get_headers(err = False):
     return headers
 
 def read_token():
-    print("READING TOKEN FORM FILE")
+    # print("READING TOKEN FORM FILE")
     with open('data/guest_id.txt', "r") as f:
         id = f.read()
-    print("ID IS:", id)
+    # print("ID IS:", id)
     return id
 
 def save_token(save=True):
@@ -101,10 +101,10 @@ def scrap_bio(headers, params):
         - provide feedback if there is no user or they are not available
     """
     r = requests.get(URL, headers=headers, params=params).json()
-
+    # print(r)
     try:
         if r.get('errors', False):
-            print("WRNG GUEST TOKEN")
+            # print("WRNG GUEST TOKEN")
             headers = get_headers(err=True)
             return scrap_bio(headers, params)
         if r['data']['user']['result']['__typename'] == 'UserUnavailable':
