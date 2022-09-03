@@ -13,10 +13,10 @@ HANDLE  = 'elonmusk'
 # HANDLE  = 'mikey19xx'
 SAVE_FILE = 'guest_id.txt'
 
-
 class TestScrapper(unittest.TestCase):
     
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         # id = get_id(err=True)
         # header_test = get_headers(err=True)
         # header_test = get_id_header(id)
