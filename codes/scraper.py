@@ -23,31 +23,31 @@ def get_handle():
     return args.handle
 
 
-def get_id(err=True):
-    """
-    Args:
-        err (bool, optional): If error generate a new id. Defaults to False.
+# def get_id(err=True):
+#     """
+#     Args:
+#         err (bool, optional): If error generate a new id. Defaults to False.
 
-    Returns:
-        id (str): return the generated id
-    """
-    try:
-        if err:
-            # print("CREATING NEW TOKEN")
-            id = save_token()
+#     Returns:
+#         id (str): return the generated id
+#     """
+#     try:
+#         if err:
+#             # print("CREATING NEW TOKEN")
+#             id = save_token()
         
-        else:
-            # print("USING CACHE")
-            id = read_token()
+#         else:
+#             # print("USING CACHE")
+#             id = read_token()
             
-            if not id:
-                return get_headers(err=True)
-    except FileNotFoundError:
-        return get_headers(err=True)
+#             if not id:
+#                 return get_headers(err=True)
+#     except FileNotFoundError:
+#         return get_headers(err=True)
     
-    return id
+#     return id
 
-def get_headers(id):
+def get_headers(id=None, err=False):
     """
     Args:
         id (str): the twitter generated id
@@ -55,8 +55,21 @@ def get_headers(id):
     Returns:
         headers (dict): dict with bearer token and id as values
     """
-
-    
+    if not id:
+        try:
+            if err:
+                # print("CREATING NEW TOKEN")
+                id = save_token()
+            
+            else:
+                # print("USING CACHE")
+                id = read_token()
+                
+                if not id:
+                    return get_headers(err=True)
+        except FileNotFoundError:
+            return get_headers(err=True)
+        
     headers = {
         "authorization": BEARER_TOKEN,
         "x-guest-token": id,
@@ -101,18 +114,20 @@ def get_params(handle):
         "variables" : json.dumps(val)
     }
     return params
-                                
-def scrap_bio(headers, params):
+
+           
+def scrap_bio(handle):
     """
 
     Args:
-        headers (_type_): _description_
-        params (_type_): _description_
+        handle: user twitter handle
 
     Returns:
         - returns a user bio if user exists
         - provide feedback if there is no user or they are not available
     """
+    headers = get_headers()
+    params = get_params(handle) 
     r = requests.get(URL, headers=headers, params=params).json()
     # print(r)
     try:
@@ -132,8 +147,6 @@ def scrap_bio(headers, params):
 if __name__ == "__main__":
     handle = get_handle().lower()
     # handle = "elonmusk"
-    id = get_id()
-    headers = get_headers(id)
-    params = get_params(handle) 
-    print(scrap_bio(headers, params))
+    # id = get_id()
+    print(scrap_bio(handle))
     
